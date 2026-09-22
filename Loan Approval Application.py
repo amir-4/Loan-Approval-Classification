@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -32,10 +33,44 @@ st.markdown(
         font-family: 'Poppins', sans-serif !important;
     }
 
+    html, body {
+        background: #0b1120;
+    }
+
     /* App background */
     .stApp {
-        background: linear-gradient(180deg, #0b1120 0%, #0f1c33 35%, #101d33 100%);
+        background: transparent;
         color: #eef2f9;
+    }
+
+    /* Animated network background lives in an injected iframe (see
+       render_animated_background()). Force it into a fixed fullscreen
+       layer behind every other element, and lift the real app content
+       above it so it stays fully clickable and readable. */
+    iframe {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 0 !important;
+        pointer-events: none !important;
+        border: none !important;
+    }
+    section[data-testid="stAppViewContainer"],
+    section[data-testid="stSidebar"],
+    header[data-testid="stHeader"] {
+        position: relative;
+        z-index: 1;
+        background: transparent;
+    }
+    div[data-testid="stAppViewBlockContainer"] {
+        position: relative;
+        z-index: 1;
+    }
+    header[data-testid="stHeader"] {
+        background: rgba(11, 17, 32, 0.4) !important;
+        backdrop-filter: blur(4px);
     }
 
     /* Hide default hamburger footer branding */
@@ -288,6 +323,105 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+# ======================================================================================
+# ANIMATED NETWORK BACKGROUND
+# Self-contained vanilla-JS canvas animation (no external CDN needed) rendered
+# in a Streamlit component. CSS above pins its iframe to a fixed, fullscreen,
+# click-through layer behind the app content.
+# ======================================================================================
+def render_animated_background():
+    components.html(
+        """
+        <canvas id="bg-canvas" style="display:block; width:100vw; height:100vh; background:
+            radial-gradient(ellipse at 20% 20%, rgba(23,217,180,0.10), transparent 55%),
+            radial-gradient(ellipse at 80% 75%, rgba(47,139,255,0.12), transparent 55%),
+            linear-gradient(180deg, #0b1120 0%, #0f1c33 45%, #101d33 100%);">
+        </canvas>
+        <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, dpr;
+
+        function resize() {
+            dpr = window.devicePixelRatio || 1;
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const NUM_NODES = 70;
+        const MAX_DIST = 150;
+        const nodes = [];
+        for (let i = 0; i < NUM_NODES; i++) {
+            nodes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.35,
+                vy: (Math.random() - 0.5) * 0.35,
+                r: Math.random() * 1.8 + 1.0,
+            });
+        }
+
+        function step() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (const n of nodes) {
+                n.x += n.vx;
+                n.y += n.vy;
+                if (n.x < 0 || n.x > width) n.vx *= -1;
+                if (n.y < 0 || n.y > height) n.vy *= -1;
+            }
+
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const a = nodes[i], b = nodes[j];
+                    const dx = a.x - b.x, dy = a.y - b.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < MAX_DIST) {
+                        const alpha = (1 - dist / MAX_DIST) * 0.35;
+                        ctx.strokeStyle = `rgba(76, 230, 193, ${alpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            for (const n of nodes) {
+                const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
+                grad.addColorStop(0, 'rgba(106, 169, 255, 0.9)');
+                grad.addColorStop(1, 'rgba(106, 169, 255, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#bff5e6';
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            requestAnimationFrame(step);
+        }
+        step();
+        </script>
+        """,
+        height=0,
+    )
+
+
+render_animated_background()
+
 
 # ======================================================================================
 # MODEL LOADING
