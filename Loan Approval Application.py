@@ -11,8 +11,8 @@ from catboost import CatBoostClassifier
 # PAGE CONFIG
 # ======================================================================================
 st.set_page_config(
-    page_title="LoanSense AI | Smart Credit Decisioning",
-    page_icon="🏦",
+    page_title="NBK Smart Loan Predictor | Academic Project",
+    page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -98,7 +98,7 @@ st.markdown(
         border-radius: 30px;
         background: rgba(56, 224, 173, 0.15);
         border: 1px solid rgba(56, 224, 173, 0.4);
-        color: #4ce6c1;
+        color: #f0c869;
         font-size: 0.78rem;
         font-weight: 600;
         letter-spacing: 0.06em;
@@ -113,7 +113,7 @@ st.markdown(
         line-height: 1.15;
     }
     .hero-title span {
-        background: linear-gradient(90deg, #4ce6c1, #6aa9ff);
+        background: linear-gradient(90deg, #f0c869, #6aa9ff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -177,7 +177,7 @@ st.markdown(
 
     /* BUTTON */
     .stButton>button {
-        background: linear-gradient(90deg, #17d9b4, #2f8bff);
+        background: linear-gradient(90deg, #d4af37, #2f8bff);
         color: #051019;
         border: none;
         border-radius: 12px;
@@ -187,7 +187,7 @@ st.markdown(
         letter-spacing: 0.02em;
         width: 100%;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
-        box-shadow: 0 10px 25px rgba(23, 217, 180, 0.25);
+        box-shadow: 0 10px 25px rgba(212,175,55, 0.25);
     }
     .stButton>button:hover {
         transform: translateY(-2px);
@@ -197,8 +197,8 @@ st.markdown(
 
     /* RESULT CARDS */
     .result-approved {
-        background: linear-gradient(135deg, rgba(23,217,180,0.18), rgba(23,217,180,0.04));
-        border: 1px solid rgba(23,217,180,0.5);
+        background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.04));
+        border: 1px solid rgba(212,175,55,0.5);
         border-radius: 20px;
         padding: 2rem;
         text-align: center;
@@ -243,8 +243,8 @@ st.markdown(
         font-weight: 500;
     }
     .stTabs [aria-selected="true"] {
-        background: rgba(23,217,180,0.16) !important;
-        color: #4ce6c1 !important;
+        background: rgba(212,175,55,0.16) !important;
+        color: #f0c869 !important;
         font-weight: 700;
     }
 
@@ -254,8 +254,8 @@ st.markdown(
     }
     .glass-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(23,217,180,0.4);
-        box-shadow: 0 14px 34px rgba(23,217,180,0.15);
+        border-color: rgba(212,175,55,0.4);
+        box-shadow: 0 14px 34px rgba(212,175,55,0.15);
     }
 
     /* PHOTO STRIP TILES */
@@ -272,7 +272,7 @@ st.markdown(
     }
     .photo-tile:hover {
         transform: scale(1.03);
-        box-shadow: 0 16px 36px rgba(23,217,180,0.25);
+        box-shadow: 0 16px 36px rgba(212,175,55,0.25);
     }
     .photo-tile::after {
         content: "";
@@ -310,6 +310,37 @@ st.markdown(
         transform: translateY(-4px);
     }
 
+    /* NBK-STYLE MONOGRAM */
+    .nbk-monogram {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 0.6rem auto;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0b1e3d, #123166);
+        border: 1.5px solid #d4af37;
+        box-shadow: 0 6px 18px rgba(212,175,55,0.25);
+        font-family: 'Poppins', sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        letter-spacing: 0.03em;
+        color: #f0c869;
+    }
+
+    /* DISCLAIMER BANNER */
+    .disclaimer-banner {
+        background: rgba(212,175,55,0.08);
+        border: 1px solid rgba(212,175,55,0.35);
+        border-radius: 12px;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+        color: #cdd8ee;
+        text-align: center;
+        margin-bottom: 1.2rem;
+    }
+
     /* Dataframe / misc text */
     .footer-note {
         text-align:center;
@@ -334,7 +365,7 @@ def render_animated_background():
     components.html(
         """
         <canvas id="bg-canvas" style="display:block; width:100vw; height:100vh; background:
-            radial-gradient(ellipse at 20% 20%, rgba(23,217,180,0.10), transparent 55%),
+            radial-gradient(ellipse at 20% 20%, rgba(212,175,55,0.10), transparent 55%),
             radial-gradient(ellipse at 80% 75%, rgba(47,139,255,0.12), transparent 55%),
             linear-gradient(180deg, #0b1120 0%, #0f1c33 45%, #101d33 100%);">
         </canvas>
@@ -386,7 +417,7 @@ def render_animated_background():
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < MAX_DIST) {
                         const alpha = (1 - dist / MAX_DIST) * 0.35;
-                        ctx.strokeStyle = `rgba(76, 230, 193, ${alpha})`;
+                        ctx.strokeStyle = `rgba(240,200,105, ${alpha})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(a.x, a.y);
@@ -405,7 +436,7 @@ def render_animated_background():
                 ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
                 ctx.fill();
 
-                ctx.fillStyle = '#bff5e6';
+                ctx.fillStyle = '#f6e3ad';
                 ctx.beginPath();
                 ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
                 ctx.fill();
@@ -451,11 +482,11 @@ with st.sidebar:
     st.markdown(
         """
         <div style="text-align:center; padding: 0.4rem 0 1.2rem 0;">
-            <div style="font-size:2.4rem;">🏦</div>
-            <div style="font-family:'Poppins',sans-serif; font-weight:800; font-size:1.25rem; color:#fff;">
-                LoanSense <span style="color:#4ce6c1;">AI</span>
+            <div class="nbk-monogram">NBK</div>
+            <div style="font-family:'Poppins',sans-serif; font-weight:800; font-size:1.15rem; color:#fff;">
+                Smart Loan <span style="color:#f0c869;">Predictor</span>
             </div>
-            <div style="color:#7f90b3; font-size:0.8rem;">Smart Credit Decision Engine</div>
+            <div style="color:#7f90b3; font-size:0.78rem;">Academic Project · Inspired by NBK</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -472,12 +503,23 @@ with st.sidebar:
         """
         <div class="glass-card" style="text-align:center;">
             <p style="margin-bottom:0.3rem;">Model Accuracy</p>
-            <h3 style="color:#4ce6c1;">94%</h3>
+            <h3 style="color:#f0c869;">94%</h3>
         </div>
         """,
         unsafe_allow_html=True,
     )
     st.caption("Powered by CatBoost Gradient Boosting")
+
+    st.markdown(
+        """
+        <div style="font-size:0.72rem; color:#5e6f8f; text-align:center; margin-top:0.8rem; line-height:1.5;">
+        This is an independent academic/portfolio project inspired by
+        National Bank of Kuwait's branding. It is not affiliated with,
+        endorsed by, or operated by NBK.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     st.image(
         "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
@@ -494,14 +536,20 @@ with st.sidebar:
 # HERO
 # ======================================================================================
 st.markdown(
+    '<div class="disclaimer-banner">🎓 Academic / portfolio project inspired by National Bank of Kuwait\'s brand style — not an official NBK product or affiliated with NBK in any way.</div>',
+    unsafe_allow_html=True,
+)
+
+st.markdown(
     """
     <div class="hero-banner">
         <div class="hero-eyebrow">🔒 AI-Powered Credit Risk Engine</div>
         <div class="hero-title">Instant, explainable <span>loan approval</span><br>decisions in seconds</div>
         <div class="hero-subtitle">
-            LoanSense AI uses a CatBoost gradient-boosting model trained on applicant demographics,
-            income, employment, and credit-history data to predict loan approval outcomes with
-            94% accuracy — helping banks and lenders make faster, data-driven decisions.
+            A CatBoost gradient-boosting model trained on applicant demographics,
+            income, employment, and credit-history data predicts loan approval outcomes with
+            94% accuracy — styled here as a concept banking experience for NBK, built for a
+            data science / machine learning portfolio.
         </div>
     </div>
     """,
@@ -664,7 +712,7 @@ if page == "🔮 Predict":
                         f"""
                         <div class="result-approved">
                             <div style="font-size:2.6rem;">✅</div>
-                            <div class="result-title" style="color:#4ce6c1;">Loan Approved</div>
+                            <div class="result-title" style="color:#f0c869;">Loan Approved</div>
                             <div class="result-sub">Approval confidence: {approve_prob*100:.1f}%</div>
                         </div>
                         """,
@@ -691,14 +739,14 @@ if page == "🔮 Predict":
                         title={"text": "Approval Probability", "font": {"color": "#cdd8ee", "size": 16}},
                         gauge={
                             "axis": {"range": [0, 100], "tickcolor": "#7f90b3"},
-                            "bar": {"color": "#17d9b4"},
+                            "bar": {"color": "#d4af37"},
                             "bgcolor": "rgba(0,0,0,0)",
                             "borderwidth": 1,
                             "bordercolor": "rgba(255,255,255,0.15)",
                             "steps": [
                                 {"range": [0, 40], "color": "rgba(255,90,90,0.35)"},
                                 {"range": [40, 70], "color": "rgba(255,200,80,0.30)"},
-                                {"range": [70, 100], "color": "rgba(23,217,180,0.35)"},
+                                {"range": [70, 100], "color": "rgba(212,175,55,0.35)"},
                             ],
                         },
                     )
@@ -725,7 +773,7 @@ if page == "🔮 Predict":
                 y="Outcome",
                 orientation="h",
                 color="Outcome",
-                color_discrete_map={"Rejected": "#ff5a5a", "Approved": "#17d9b4"},
+                color_discrete_map={"Rejected": "#ff5a5a", "Approved": "#d4af37"},
                 text=prob_df["Probability"].apply(lambda v: f"{v*100:.1f}%"),
             )
             bar_fig.update_traces(textposition="outside")
@@ -762,14 +810,14 @@ elif page == "📊 Model Insights":
                 title={"text": "Held-out Test Accuracy", "font": {"color": "#cdd8ee", "size": 16}},
                 gauge={
                     "axis": {"range": [0, 100], "tickcolor": "#7f90b3"},
-                    "bar": {"color": "#4ce6c1"},
+                    "bar": {"color": "#f0c869"},
                     "bgcolor": "rgba(0,0,0,0)",
                     "borderwidth": 1,
                     "bordercolor": "rgba(255,255,255,0.15)",
                     "steps": [
                         {"range": [0, 60], "color": "rgba(255,90,90,0.25)"},
                         {"range": [60, 85], "color": "rgba(255,200,80,0.25)"},
-                        {"range": [85, 100], "color": "rgba(23,217,180,0.30)"},
+                        {"range": [85, 100], "color": "rgba(212,175,55,0.30)"},
                     ],
                 },
             )
@@ -818,7 +866,7 @@ elif page == "📊 Model Insights":
                     y="Feature",
                     orientation="h",
                     color="Importance",
-                    color_continuous_scale=["#0f1c33", "#17d9b4"],
+                    color_continuous_scale=["#0f1c33", "#d4af37"],
                 )
                 fig.update_layout(
                     paper_bgcolor="rgba(0,0,0,0)",
@@ -839,8 +887,8 @@ elif page == "📊 Model Insights":
                         r=top5["Importance"].tolist() + [top5["Importance"].iloc[0]],
                         theta=top5["Feature"].tolist() + [top5["Feature"].iloc[0]],
                         fill="toself",
-                        line_color="#17d9b4",
-                        fillcolor="rgba(23,217,180,0.25)",
+                        line_color="#d4af37",
+                        fillcolor="rgba(212,175,55,0.25)",
                     )
                 )
                 radar_fig.update_layout(
@@ -887,7 +935,7 @@ elif page == "📊 Model Insights":
             """
             <div class="glass-card">
                 <p>Test Accuracy</p>
-                <h3 style="font-size:1.4rem; color:#4ce6c1;">94%</h3>
+                <h3 style="font-size:1.4rem; color:#f0c869;">94%</h3>
             </div>
             """,
             unsafe_allow_html=True,
@@ -903,7 +951,9 @@ else:
         st.markdown(
             """
             <div class="section-caption">
-            LoanSense AI is a machine-learning-powered loan approval predictor built with a
+            This <b>NBK Smart Loan Predictor</b> is a machine-learning-powered loan approval
+            predictor concept, styled after NBK's brand colors as a portfolio project. It is
+            built with a
             <b>CatBoost</b> gradient boosting classifier, reaching <b>94% accuracy</b> on the
             held-out test set. It evaluates applicant demographics, income, employment history,
             loan characteristics, and credit history to estimate the likelihood that a loan
@@ -944,7 +994,7 @@ else:
             values="Count",
             hole=0.55,
             color="Type",
-            color_discrete_map={"Categorical": "#2f8bff", "Float": "#17d9b4", "Integer": "#4ce6c1"},
+            color_discrete_map={"Categorical": "#2f8bff", "Float": "#d4af37", "Integer": "#f0c869"},
         )
         donut_fig.update_traces(textfont_color="#0b1120", textinfo="label+value")
         donut_fig.update_layout(
@@ -993,6 +1043,6 @@ else:
         )
 
 st.markdown(
-    '<div class="footer-note">LoanSense AI · CatBoost Loan Approval Model · Built with Streamlit & Plotly</div>',
+    '<div class="footer-note">Academic project inspired by National Bank of Kuwait (NBK) branding — not affiliated with NBK · CatBoost Loan Approval Model · Built with Streamlit & Plotly</div>',
     unsafe_allow_html=True,
 )
