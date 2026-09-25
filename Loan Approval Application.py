@@ -11,19 +11,30 @@ from catboost import CatBoostClassifier
 # PAGE CONFIG
 # ======================================================================================
 st.set_page_config(
-    page_title="NBK Smart Loan Predictor | Academic Project",
-    page_icon="🏛️",
+    page_title="NBK Pulse | AI Loan Intelligence",
+    page_icon="🟡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # ======================================================================================
-# CUSTOM CSS — BANKING / FINTECH THEME
+# CUSTOM CSS — BLACK / GOLD / YELLOW MODERN THEME
 # ======================================================================================
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --c-black: #050505;
+        --c-black2: #0d0c09;
+        --c-panel: rgba(255,255,255,0.045);
+        --c-gold: #d4af37;
+        --c-gold-light: #f4d67a;
+        --c-yellow: #ffd447;
+        --c-text: #f4f1e8;
+        --c-muted: #a49f8f;
+    }
 
     html, body, [class*="css"]  {
         font-family: 'Inter', sans-serif;
@@ -34,13 +45,13 @@ st.markdown(
     }
 
     html, body {
-        background: #0b1120;
+        background: var(--c-black);
     }
 
     /* App background */
     .stApp {
         background: transparent;
-        color: #eef2f9;
+        color: var(--c-text);
     }
 
     /* Animated network background lives in an injected iframe (see
@@ -69,7 +80,7 @@ st.markdown(
         z-index: 1;
     }
     header[data-testid="stHeader"] {
-        background: rgba(11, 17, 32, 0.4) !important;
+        background: rgba(5,5,5,0.55) !important;
         backdrop-filter: blur(4px);
     }
 
@@ -77,28 +88,66 @@ st.markdown(
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 
+    /* NBK PULSE LOGO */
+    .nbk-logo-wrap {
+        text-align: center;
+        padding: 0.3rem 0 1rem 0;
+    }
+    .nbk-logo {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 0.55rem auto;
+        clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+        background: linear-gradient(150deg, #0c0c0d, #1c1a12);
+        border: 1.5px solid var(--c-gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: logo-glow 3s ease-in-out infinite;
+    }
+    @keyframes logo-glow {
+        0%, 100% { box-shadow: 0 0 14px rgba(212,175,55,0.30), inset 0 0 10px rgba(212,175,55,0.08); }
+        50%      { box-shadow: 0 0 28px rgba(255,212,71,0.55), inset 0 0 16px rgba(255,212,71,0.18); }
+    }
+    .nbk-logo-word {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        font-size: 1.05rem;
+        color: #ffffff;
+    }
+    .nbk-logo-word span {
+        color: var(--c-gold);
+        margin-left: 0.28rem;
+    }
+    .nbk-logo-tagline {
+        color: var(--c-muted);
+        font-size: 0.74rem;
+        letter-spacing: 0.03em;
+    }
+
     /* HERO BANNER */
     .hero-banner {
         position: relative;
         border-radius: 22px;
         overflow: hidden;
         padding: 3.2rem 2.5rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.4rem;
         background-image:
-            linear-gradient(120deg, rgba(6,12,28,0.88) 10%, rgba(11,42,74,0.75) 55%, rgba(4,120,120,0.55) 100%),
+            linear-gradient(120deg, rgba(3,3,3,0.93) 10%, rgba(18,15,4,0.82) 55%, rgba(46,35,4,0.55) 100%),
             url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1600&auto=format&fit=crop');
         background-size: cover;
         background-position: center;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        border: 1px solid rgba(212,175,55,0.18);
     }
     .hero-eyebrow {
         display: inline-block;
         padding: 0.35rem 0.9rem;
         border-radius: 30px;
-        background: rgba(56, 224, 173, 0.15);
-        border: 1px solid rgba(56, 224, 173, 0.4);
-        color: #f0c869;
+        background: rgba(255, 212, 71, 0.12);
+        border: 1px solid rgba(255, 212, 71, 0.4);
+        color: var(--c-yellow);
         font-size: 0.78rem;
         font-weight: 600;
         letter-spacing: 0.06em;
@@ -113,27 +162,62 @@ st.markdown(
         line-height: 1.15;
     }
     .hero-title span {
-        background: linear-gradient(90deg, #f0c869, #6aa9ff);
+        background: linear-gradient(90deg, var(--c-gold), var(--c-yellow));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
     .hero-subtitle {
         font-size: 1.05rem;
-        color: #cdd8ee;
+        color: #d9d3c2;
         max-width: 680px;
         line-height: 1.6;
         font-weight: 300;
     }
 
+    /* TRUST STRIP */
+    .trust-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin-top: 1.4rem;
+    }
+    .trust-chip {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(212,175,55,0.25);
+        border-radius: 30px;
+        padding: 0.4rem 0.9rem;
+        font-size: 0.78rem;
+        color: #e9e4d4;
+        font-weight: 500;
+    }
+
+    /* DISCLAIMER — subtle small-print pill */
+    .disclaimer-banner {
+        display: inline-block;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(212,175,55,0.2);
+        border-radius: 30px;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.7rem;
+        color: var(--c-muted);
+        margin-bottom: 0.9rem;
+    }
+
     /* METRIC / GLASS CARDS */
     .glass-card {
-        background: rgba(255, 255, 255, 0.045);
-        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: var(--c-panel);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 18px;
         padding: 1.4rem 1.4rem;
         backdrop-filter: blur(6px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.35);
         height: 100%;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .glass-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(212,175,55,0.45);
+        box-shadow: 0 14px 34px rgba(212,175,55,0.18);
     }
     .glass-card h3 {
         margin: 0;
@@ -143,7 +227,7 @@ st.markdown(
     }
     .glass-card p {
         margin: 0.2rem 0 0 0;
-        color: #9db0cf;
+        color: var(--c-muted);
         font-size: 0.85rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -160,7 +244,7 @@ st.markdown(
         gap: 0.5rem;
     }
     .section-caption {
-        color: #93a4c2;
+        color: #b8b1a0;
         font-size: 0.9rem;
         margin-bottom: 1.1rem;
         font-weight: 300;
@@ -168,17 +252,22 @@ st.markdown(
 
     /* FORM CONTAINER */
     .form-block {
-        background: rgba(255,255,255,0.035);
-        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(212,175,55,0.12);
         border-radius: 18px;
         padding: 1.6rem 1.7rem 1rem 1.7rem;
         margin-bottom: 1.3rem;
     }
+    .calc-note {
+        font-size: 0.78rem;
+        color: var(--c-muted);
+        margin: -0.4rem 0 0.8rem 0;
+    }
 
     /* BUTTON */
     .stButton>button {
-        background: linear-gradient(90deg, #d4af37, #2f8bff);
-        color: #051019;
+        background: linear-gradient(90deg, var(--c-gold), var(--c-yellow));
+        color: #0a0a0a;
         border: none;
         border-radius: 12px;
         padding: 0.75rem 1.6rem;
@@ -187,25 +276,25 @@ st.markdown(
         letter-spacing: 0.02em;
         width: 100%;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
-        box-shadow: 0 10px 25px rgba(212,175,55, 0.25);
+        box-shadow: 0 10px 25px rgba(212,175,55,0.3);
     }
     .stButton>button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 14px 32px rgba(47, 139, 255, 0.35);
-        color: #051019;
+        box-shadow: 0 14px 32px rgba(255,212,71,0.45);
+        color: #0a0a0a;
     }
 
     /* RESULT CARDS */
     .result-approved {
-        background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.04));
-        border: 1px solid rgba(212,175,55,0.5);
+        background: linear-gradient(135deg, rgba(212,175,55,0.20), rgba(212,175,55,0.03));
+        border: 1px solid rgba(212,175,55,0.55);
         border-radius: 20px;
         padding: 2rem;
         text-align: center;
     }
     .result-rejected {
-        background: linear-gradient(135deg, rgba(255,90,90,0.18), rgba(255,90,90,0.04));
-        border: 1px solid rgba(255,90,90,0.5);
+        background: linear-gradient(135deg, rgba(224,82,82,0.20), rgba(224,82,82,0.03));
+        border: 1px solid rgba(224,82,82,0.55);
         border-radius: 20px;
         padding: 2rem;
         text-align: center;
@@ -217,15 +306,15 @@ st.markdown(
         font-family: 'Poppins', sans-serif;
     }
     .result-sub {
-        color: #cdd8ee;
+        color: #d9d3c2;
         font-size: 0.95rem;
         font-weight: 300;
     }
 
     /* SIDEBAR */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #060c18 0%, #0c1830 100%);
-        border-right: 1px solid rgba(255,255,255,0.06);
+        background: linear-gradient(180deg, #040404 0%, #0d0c08 100%);
+        border-right: 1px solid rgba(212,175,55,0.10);
     }
     section[data-testid="stSidebar"] .stRadio label {
         font-size: 0.98rem;
@@ -239,23 +328,13 @@ st.markdown(
         background: rgba(255,255,255,0.04);
         border-radius: 10px 10px 0 0;
         padding: 0.5rem 1.1rem;
-        color: #b9c6e0;
+        color: #cfc9b8;
         font-weight: 500;
     }
     .stTabs [aria-selected="true"] {
-        background: rgba(212,175,55,0.16) !important;
-        color: #f0c869 !important;
+        background: rgba(212,175,55,0.18) !important;
+        color: var(--c-yellow) !important;
         font-weight: 700;
-    }
-
-    /* GLASS CARD HOVER */
-    .glass-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-    .glass-card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(212,175,55,0.4);
-        box-shadow: 0 14px 34px rgba(212,175,55,0.15);
     }
 
     /* PHOTO STRIP TILES */
@@ -266,19 +345,19 @@ st.markdown(
         height: 150px;
         background-size: cover;
         background-position: center;
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        border: 1px solid rgba(212,175,55,0.18);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .photo-tile:hover {
         transform: scale(1.03);
-        box-shadow: 0 16px 36px rgba(212,175,55,0.25);
+        box-shadow: 0 16px 36px rgba(212,175,55,0.3);
     }
     .photo-tile::after {
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(0deg, rgba(4,10,22,0.92) 5%, rgba(4,10,22,0.15) 60%, rgba(4,10,22,0.05) 100%);
+        background: linear-gradient(0deg, rgba(2,2,2,0.94) 5%, rgba(2,2,2,0.2) 60%, rgba(2,2,2,0.05) 100%);
     }
     .photo-tile-label {
         position: absolute;
@@ -302,53 +381,40 @@ st.markdown(
     .mosaic-img {
         border-radius: 16px;
         overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        border: 1px solid rgba(212,175,55,0.18);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         transition: transform 0.25s ease;
     }
     .mosaic-img:hover {
         transform: translateY(-4px);
     }
 
-    /* NBK-STYLE MONOGRAM */
-    .nbk-monogram {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 0.6rem auto;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #0b1e3d, #123166);
-        border: 1.5px solid #d4af37;
-        box-shadow: 0 6px 18px rgba(212,175,55,0.25);
-        font-family: 'Poppins', sans-serif;
-        font-weight: 800;
-        font-size: 1.5rem;
-        letter-spacing: 0.03em;
-        color: #f0c869;
-    }
-
-    /* DISCLAIMER BANNER */
-    .disclaimer-banner {
-        background: rgba(212,175,55,0.08);
-        border: 1px solid rgba(212,175,55,0.35);
-        border-radius: 12px;
-        padding: 0.6rem 1rem;
-        font-size: 0.8rem;
-        color: #cdd8ee;
-        text-align: center;
-        margin-bottom: 1.2rem;
-    }
-
     /* Dataframe / misc text */
     .footer-note {
         text-align:center;
-        color:#5e6f8f;
+        color: var(--c-muted);
         font-size:0.8rem;
         margin-top: 2.5rem;
         padding-top: 1.2rem;
-        border-top: 1px solid rgba(255,255,255,0.06);
+        border-top: 1px solid rgba(212,175,55,0.12);
+    }
+
+    /* MOBILE RESPONSIVENESS */
+    @media (max-width: 768px) {
+        .hero-banner { padding: 2rem 1.2rem; border-radius: 16px; }
+        .hero-title { font-size: 1.65rem; line-height: 1.25; }
+        .hero-subtitle { font-size: 0.92rem; }
+        .hero-eyebrow { font-size: 0.68rem; padding: 0.28rem 0.7rem; }
+        .trust-chip { font-size: 0.7rem; padding: 0.32rem 0.7rem; }
+        .glass-card { padding: 1rem; }
+        .glass-card h3 { font-size: 1.5rem; }
+        .photo-tile { height: 100px; }
+        .photo-tile-label { font-size: 0.78rem; }
+        .photo-tile-icon { font-size: 1.1rem; }
+        .form-block { padding: 1.1rem 1rem 0.5rem 1rem; }
+        .nbk-logo { width: 54px; height: 54px; }
+        .section-title { font-size: 1.15rem; }
+        .result-title { font-size: 1.4rem; }
     }
     </style>
     """,
@@ -365,9 +431,9 @@ def render_animated_background():
     components.html(
         """
         <canvas id="bg-canvas" style="display:block; width:100vw; height:100vh; background:
-            radial-gradient(ellipse at 20% 20%, rgba(212,175,55,0.10), transparent 55%),
-            radial-gradient(ellipse at 80% 75%, rgba(47,139,255,0.12), transparent 55%),
-            linear-gradient(180deg, #0b1120 0%, #0f1c33 45%, #101d33 100%);">
+            radial-gradient(ellipse at 20% 20%, rgba(212,175,55,0.12), transparent 55%),
+            radial-gradient(ellipse at 80% 75%, rgba(255,212,71,0.10), transparent 55%),
+            linear-gradient(180deg, #050505 0%, #0c0a06 45%, #100d07 100%);">
         </canvas>
         <script>
         const canvas = document.getElementById('bg-canvas');
@@ -417,7 +483,7 @@ def render_animated_background():
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < MAX_DIST) {
                         const alpha = (1 - dist / MAX_DIST) * 0.35;
-                        ctx.strokeStyle = `rgba(240,200,105, ${alpha})`;
+                        ctx.strokeStyle = `rgba(212,175,55, ${alpha})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(a.x, a.y);
@@ -429,8 +495,8 @@ def render_animated_background():
 
             for (const n of nodes) {
                 const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
-                grad.addColorStop(0, 'rgba(106, 169, 255, 0.9)');
-                grad.addColorStop(1, 'rgba(106, 169, 255, 0)');
+                grad.addColorStop(0, 'rgba(255, 212, 71, 0.9)');
+                grad.addColorStop(1, 'rgba(255, 212, 71, 0)');
                 ctx.fillStyle = grad;
                 ctx.beginPath();
                 ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
@@ -475,18 +541,58 @@ def load_model():
 
 model = load_model()
 
+
+def resolve_prediction(model, input_df):
+    """
+    Return (prediction_label, approve_probability) using the model's OWN
+    predict() output as the source of truth, rather than assuming
+    predict_proba()'s column order matches label values. This avoids the
+    approved/rejected label getting flipped when a model's internal
+    class order isn't [0, 1].
+    """
+    proba = np.array(model.predict_proba(input_df)).flatten()
+
+    raw_pred = np.array(model.predict(input_df)).flatten()[0]
+    try:
+        prediction = int(raw_pred)
+    except (ValueError, TypeError):
+        prediction = 1 if str(raw_pred).strip().lower() in ("1", "approved", "yes", "true") else 0
+
+    classes = list(getattr(model, "classes_", [0, 1]))
+    approve_idx = None
+    for i, c in enumerate(classes):
+        if c == 1 or str(c).strip().lower() in ("1", "approved", "yes", "true"):
+            approve_idx = i
+            break
+    if approve_idx is None or approve_idx >= len(proba):
+        approve_idx = int(np.argmax(proba))
+
+    approve_prob = float(proba[approve_idx])
+    return prediction, approve_prob
+
+
 # ======================================================================================
 # SIDEBAR
 # ======================================================================================
 with st.sidebar:
     st.markdown(
         """
-        <div style="text-align:center; padding: 0.4rem 0 1.2rem 0;">
-            <div class="nbk-monogram">NBK</div>
-            <div style="font-family:'Poppins',sans-serif; font-weight:800; font-size:1.15rem; color:#fff;">
-                Smart Loan <span style="color:#f0c869;">Predictor</span>
+        <div class="nbk-logo-wrap">
+            <div class="nbk-logo">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 14 L7 14 L9 9 L12 18 L15 6 L17 14 L22 14"
+                          stroke="url(#pulseGrad)" stroke-width="1.9"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="pulseGrad" x1="0" y1="0" x2="24" y2="0">
+                            <stop offset="0" stop-color="#d4af37"/>
+                            <stop offset="1" stop-color="#ffd447"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
             </div>
-            <div style="color:#7f90b3; font-size:0.78rem;">Academic Project · Inspired by NBK</div>
+            <div class="nbk-logo-word">NBK <span>PULSE</span></div>
+            <div class="nbk-logo-tagline">AI Credit Intelligence</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -503,7 +609,7 @@ with st.sidebar:
         """
         <div class="glass-card" style="text-align:center;">
             <p style="margin-bottom:0.3rem;">Model Accuracy</p>
-            <h3 style="color:#f0c869;">94%</h3>
+            <h3 style="color:#ffd447;">94%</h3>
         </div>
         """,
         unsafe_allow_html=True,
@@ -511,13 +617,7 @@ with st.sidebar:
     st.caption("Powered by CatBoost Gradient Boosting")
 
     st.markdown(
-        """
-        <div style="font-size:0.72rem; color:#5e6f8f; text-align:center; margin-top:0.8rem; line-height:1.5;">
-        This is an independent academic/portfolio project inspired by
-        National Bank of Kuwait's branding. It is not affiliated with,
-        endorsed by, or operated by NBK.
-        </div>
-        """,
+        '<div class="disclaimer-banner">🎓 Concept project inspired by NBK — not an official NBK product</div>',
         unsafe_allow_html=True,
     )
 
@@ -536,20 +636,20 @@ with st.sidebar:
 # HERO
 # ======================================================================================
 st.markdown(
-    '<div class="disclaimer-banner">🎓 Academic / portfolio project inspired by National Bank of Kuwait\'s brand style — not an official NBK product or affiliated with NBK in any way.</div>',
-    unsafe_allow_html=True,
-)
-
-st.markdown(
     """
     <div class="hero-banner">
-        <div class="hero-eyebrow">🔒 AI-Powered Credit Risk Engine</div>
+        <div class="hero-eyebrow">🟡 AI-Powered Credit Risk Engine</div>
         <div class="hero-title">Instant, explainable <span>loan approval</span><br>decisions in seconds</div>
         <div class="hero-subtitle">
-            A CatBoost gradient-boosting model trained on applicant demographics,
-            income, employment, and credit-history data predicts loan approval outcomes with
-            94% accuracy — styled here as a concept banking experience for NBK, built for a
-            data science / machine learning portfolio.
+            NBK Pulse uses a CatBoost gradient-boosting model trained on applicant demographics,
+            income, employment, and credit-history data to predict loan approval outcomes with
+            94% accuracy — a concept banking experience built for a data science / machine
+            learning portfolio.
+        </div>
+        <div class="trust-strip">
+            <div class="trust-chip">⚡ Instant Decisioning</div>
+            <div class="trust-chip">🧠 94% Model Accuracy</div>
+            <div class="trust-chip">🔐 No Data Stored — Demo Only</div>
         </div>
     </div>
     """,
@@ -621,7 +721,7 @@ if page == "🔮 Predict":
         st.markdown("#### 💰 Financial & Employment")
         c1, c2, c3 = st.columns(3)
         with c1:
-            person_income = st.number_input("Annual Income ($)", min_value=0, value=55000, step=1000)
+            person_income = st.number_input("Annual Income ($)", min_value=1, value=55000, step=1000)
         with c2:
             person_emp_exp = st.number_input("Employment Experience (years)", min_value=0, max_value=60, value=5, step=1)
         with c3:
@@ -643,12 +743,14 @@ if page == "🔮 Predict":
         with c3:
             loan_int_rate = st.number_input("Interest Rate (%)", min_value=0.0, max_value=50.0, value=11.5, step=0.1)
 
+        st.markdown(
+            '<div class="calc-note">💡 Loan-to-Income ratio is calculated automatically '
+            'from Loan Amount ÷ Annual Income — no need to set it manually.</div>',
+            unsafe_allow_html=True,
+        )
+
         c1, c2 = st.columns(2)
         with c1:
-            loan_percent_income = st.slider(
-                "Loan Amount as % of Income", min_value=0.0, max_value=1.0, value=0.18, step=0.01
-            )
-        with c2:
             previous_loan_defaults_on_file = st.selectbox(
                 "Previous Loan Defaults on File", ["No", "Yes"]
             )
@@ -671,6 +773,8 @@ if page == "🔮 Predict":
         if model is None:
             st.error("Cannot run prediction — model file was not found. See the sidebar for instructions.")
         else:
+            loan_percent_income = (loan_amnt / person_income) if person_income > 0 else 0.0
+
             input_df = pd.DataFrame(
                 [{
                     "person_age": float(person_age),
@@ -690,9 +794,7 @@ if page == "🔮 Predict":
             )
 
             try:
-                proba = model.predict_proba(input_df)[0]
-                prediction = int(np.argmax(proba))
-                approve_prob = float(proba[1]) if len(proba) > 1 else float(proba[0])
+                prediction, approve_prob = resolve_prediction(model, input_df)
             except Exception as e:
                 st.error(f"Prediction failed: {e}")
                 st.info(
@@ -712,7 +814,7 @@ if page == "🔮 Predict":
                         f"""
                         <div class="result-approved">
                             <div style="font-size:2.6rem;">✅</div>
-                            <div class="result-title" style="color:#f0c869;">Loan Approved</div>
+                            <div class="result-title" style="color:#ffd447;">Loan Approved</div>
                             <div class="result-sub">Approval confidence: {approve_prob*100:.1f}%</div>
                         </div>
                         """,
@@ -723,7 +825,7 @@ if page == "🔮 Predict":
                         f"""
                         <div class="result-rejected">
                             <div style="font-size:2.6rem;">❌</div>
-                            <div class="result-title" style="color:#ff8080;">Loan Rejected</div>
+                            <div class="result-title" style="color:#ff8b8b;">Loan Rejected</div>
                             <div class="result-sub">Approval confidence: {approve_prob*100:.1f}%</div>
                         </div>
                         """,
@@ -736,16 +838,16 @@ if page == "🔮 Predict":
                         mode="gauge+number",
                         value=approve_prob * 100,
                         number={"suffix": "%", "font": {"color": "#ffffff", "size": 36}},
-                        title={"text": "Approval Probability", "font": {"color": "#cdd8ee", "size": 16}},
+                        title={"text": "Approval Probability", "font": {"color": "#d9d3c2", "size": 16}},
                         gauge={
-                            "axis": {"range": [0, 100], "tickcolor": "#7f90b3"},
+                            "axis": {"range": [0, 100], "tickcolor": "#a49f8f"},
                             "bar": {"color": "#d4af37"},
                             "bgcolor": "rgba(0,0,0,0)",
                             "borderwidth": 1,
                             "bordercolor": "rgba(255,255,255,0.15)",
                             "steps": [
-                                {"range": [0, 40], "color": "rgba(255,90,90,0.35)"},
-                                {"range": [40, 70], "color": "rgba(255,200,80,0.30)"},
+                                {"range": [0, 40], "color": "rgba(224,82,82,0.30)"},
+                                {"range": [40, 70], "color": "rgba(255,212,71,0.22)"},
                                 {"range": [70, 100], "color": "rgba(212,175,55,0.35)"},
                             ],
                         },
@@ -754,43 +856,66 @@ if page == "🔮 Predict":
                 fig.update_layout(
                     paper_bgcolor="rgba(0,0,0,0)",
                     plot_bgcolor="rgba(0,0,0,0)",
-                    font={"color": "#eef2f9"},
+                    font={"color": "#f4f1e8"},
                     height=280,
                     margin=dict(l=20, r=20, t=50, b=10),
                 )
                 st.plotly_chart(fig, use_container_width=True)
 
-            # Probability breakdown bar chart
-            prob_df = pd.DataFrame(
-                {
-                    "Outcome": ["Rejected", "Approved"],
-                    "Probability": [float(proba[0]), float(proba[1])] if len(proba) > 1 else [1 - approve_prob, approve_prob],
-                }
+            # Probability breakdown — donut chart
+            donut_fig = go.Figure(
+                data=[
+                    go.Pie(
+                        labels=["Approved", "Rejected"],
+                        values=[approve_prob, 1 - approve_prob],
+                        hole=0.62,
+                        marker=dict(colors=["#d4af37", "#e05252"], line=dict(color="#050505", width=2)),
+                        textinfo="label+percent",
+                        textfont=dict(color="#050505", size=13),
+                        sort=False,
+                    )
+                ]
             )
-            bar_fig = px.bar(
-                prob_df,
-                x="Probability",
-                y="Outcome",
-                orientation="h",
-                color="Outcome",
-                color_discrete_map={"Rejected": "#ff5a5a", "Approved": "#d4af37"},
-                text=prob_df["Probability"].apply(lambda v: f"{v*100:.1f}%"),
-            )
-            bar_fig.update_traces(textposition="outside")
-            bar_fig.update_layout(
+            donut_fig.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
-                font={"color": "#eef2f9"},
-                showlegend=False,
-                height=220,
+                font={"color": "#f4f1e8"},
+                height=280,
+                showlegend=True,
+                legend=dict(orientation="h", yanchor="bottom", y=-0.15, font=dict(color="#d9d3c2")),
                 margin=dict(l=10, r=10, t=20, b=10),
-                xaxis=dict(range=[0, 1], gridcolor="rgba(255,255,255,0.08)"),
+                annotations=[dict(
+                    text=f"{approve_prob*100:.0f}%",
+                    x=0.5, y=0.5,
+                    font=dict(size=26, color="#ffffff", family="Poppins"),
+                    showarrow=False,
+                )],
             )
-            st.plotly_chart(bar_fig, use_container_width=True)
+            st.plotly_chart(donut_fig, use_container_width=True)
+
+            # Key ratios recap
+            r1, r2, r3 = st.columns(3)
+            with r1:
+                st.markdown(
+                    f"""<div class="glass-card"><h3 style="font-size:1.5rem;">{loan_percent_income*100:.1f}%</h3><p>Loan-to-Income Ratio</p></div>""",
+                    unsafe_allow_html=True,
+                )
+            with r2:
+                st.markdown(
+                    f"""<div class="glass-card"><h3 style="font-size:1.5rem;">{loan_int_rate:.1f}%</h3><p>Interest Rate</p></div>""",
+                    unsafe_allow_html=True,
+                )
+            with r3:
+                st.markdown(
+                    f"""<div class="glass-card"><h3 style="font-size:1.5rem;">{int(credit_score)}</h3><p>Credit Score</p></div>""",
+                    unsafe_allow_html=True,
+                )
 
             # Applicant summary
+            display_df = input_df.copy()
+            display_df["loan_percent_income"] = display_df["loan_percent_income"].apply(lambda v: f"{v*100:.1f}%")
             with st.expander("📋 View submitted applicant profile"):
-                st.dataframe(input_df.T.rename(columns={0: "Value"}), use_container_width=True)
+                st.dataframe(display_df.T.rename(columns={0: "Value"}), use_container_width=True)
 
 # ======================================================================================
 # PAGE: MODEL INSIGHTS
@@ -807,16 +932,16 @@ elif page == "📊 Model Insights":
                 mode="gauge+number",
                 value=94,
                 number={"suffix": "%", "font": {"color": "#ffffff", "size": 34}},
-                title={"text": "Held-out Test Accuracy", "font": {"color": "#cdd8ee", "size": 16}},
+                title={"text": "Held-out Test Accuracy", "font": {"color": "#d9d3c2", "size": 16}},
                 gauge={
-                    "axis": {"range": [0, 100], "tickcolor": "#7f90b3"},
-                    "bar": {"color": "#f0c869"},
+                    "axis": {"range": [0, 100], "tickcolor": "#a49f8f"},
+                    "bar": {"color": "#ffd447"},
                     "bgcolor": "rgba(0,0,0,0)",
                     "borderwidth": 1,
                     "bordercolor": "rgba(255,255,255,0.15)",
                     "steps": [
-                        {"range": [0, 60], "color": "rgba(255,90,90,0.25)"},
-                        {"range": [60, 85], "color": "rgba(255,200,80,0.25)"},
+                        {"range": [0, 60], "color": "rgba(224,82,82,0.25)"},
+                        {"range": [60, 85], "color": "rgba(255,212,71,0.22)"},
                         {"range": [85, 100], "color": "rgba(212,175,55,0.30)"},
                     ],
                 },
@@ -825,7 +950,7 @@ elif page == "📊 Model Insights":
         acc_fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font={"color": "#eef2f9"},
+            font={"color": "#f4f1e8"},
             height=260,
             margin=dict(l=20, r=20, t=50, b=10),
         )
@@ -866,12 +991,12 @@ elif page == "📊 Model Insights":
                     y="Feature",
                     orientation="h",
                     color="Importance",
-                    color_continuous_scale=["#0f1c33", "#d4af37"],
+                    color_continuous_scale=["#1a1a1a", "#d4af37"],
                 )
                 fig.update_layout(
                     paper_bgcolor="rgba(0,0,0,0)",
                     plot_bgcolor="rgba(0,0,0,0)",
-                    font={"color": "#eef2f9"},
+                    font={"color": "#f4f1e8"},
                     height=460,
                     coloraxis_showscale=False,
                     margin=dict(l=10, r=10, t=20, b=10),
@@ -894,7 +1019,7 @@ elif page == "📊 Model Insights":
                 radar_fig.update_layout(
                     paper_bgcolor="rgba(0,0,0,0)",
                     plot_bgcolor="rgba(0,0,0,0)",
-                    font={"color": "#eef2f9", "size": 10},
+                    font={"color": "#f4f1e8", "size": 10},
                     polar=dict(
                         bgcolor="rgba(0,0,0,0)",
                         radialaxis=dict(showticklabels=False, gridcolor="rgba(255,255,255,0.12)"),
@@ -935,7 +1060,7 @@ elif page == "📊 Model Insights":
             """
             <div class="glass-card">
                 <p>Test Accuracy</p>
-                <h3 style="font-size:1.4rem; color:#f0c869;">94%</h3>
+                <h3 style="font-size:1.4rem; color:#ffd447;">94%</h3>
             </div>
             """,
             unsafe_allow_html=True,
@@ -951,9 +1076,8 @@ else:
         st.markdown(
             """
             <div class="section-caption">
-            This <b>NBK Smart Loan Predictor</b> is a machine-learning-powered loan approval
-            predictor concept, styled after NBK's brand colors as a portfolio project. It is
-            built with a
+            <b>NBK Pulse</b> is a machine-learning-powered loan approval predictor concept,
+            styled in NBK-inspired branding as a portfolio project. It is built with a
             <b>CatBoost</b> gradient boosting classifier, reaching <b>94% accuracy</b> on the
             held-out test set. It evaluates applicant demographics, income, employment history,
             loan characteristics, and credit history to estimate the likelihood that a loan
@@ -975,7 +1099,7 @@ else:
                 ["🏦 loan_amnt", "Amount of loan requested", "Float"],
                 ["🎯 loan_intent", "Intended purpose of the loan", "Categorical"],
                 ["📈 loan_int_rate", "Interest rate applicable to the loan", "Float"],
-                ["📊 loan_percent_income", "Loan amount as % of annual income", "Float"],
+                ["📊 loan_percent_income", "Loan amount as % of annual income (auto-calculated)", "Float"],
                 ["🕰️ cb_person_cred_hist_length", "Years of credit history", "Float"],
                 ["💳 credit_score", "Applicant's credit score", "Integer"],
                 ["❗ previous_loan_defaults_on_file", "Indicator of previous loan defaults", "Categorical"],
@@ -988,25 +1112,25 @@ else:
         st.markdown("#### 🧮 Feature Type Breakdown")
         type_counts = feature_table["Type"].value_counts().reset_index()
         type_counts.columns = ["Type", "Count"]
-        donut_fig = px.pie(
+        donut_fig2 = px.pie(
             type_counts,
             names="Type",
             values="Count",
             hole=0.55,
             color="Type",
-            color_discrete_map={"Categorical": "#2f8bff", "Float": "#d4af37", "Integer": "#f0c869"},
+            color_discrete_map={"Categorical": "#ffd447", "Float": "#d4af37", "Integer": "#f4d67a"},
         )
-        donut_fig.update_traces(textfont_color="#0b1120", textinfo="label+value")
-        donut_fig.update_layout(
+        donut_fig2.update_traces(textfont_color="#050505", textinfo="label+value")
+        donut_fig2.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font={"color": "#eef2f9"},
+            font={"color": "#f4f1e8"},
             height=320,
             showlegend=True,
-            legend=dict(font=dict(color="#cdd8ee")),
+            legend=dict(font=dict(color="#d9d3c2")),
             margin=dict(l=10, r=10, t=20, b=10),
         )
-        st.plotly_chart(donut_fig, use_container_width=True)
+        st.plotly_chart(donut_fig2, use_container_width=True)
 
     with right:
         st.image(
@@ -1027,22 +1151,7 @@ else:
                 unsafe_allow_html=True,
             )
 
-        st.write("")
-        st.markdown(
-            """
-            <div class="glass-card" style="margin-top:1rem;">
-                <p>How to run</p>
-                <h3 style="font-size:1.05rem; font-weight:500; color:#cdd8ee; line-height:1.6;">
-                1. Place <code>catboost_loan_approval.cbm</code> next to <code>app.py</code><br>
-                2. <code>pip install -r requirements.txt</code><br>
-                3. <code>python -m streamlit run app.py</code>
-                </h3>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
 st.markdown(
-    '<div class="footer-note">Academic project inspired by National Bank of Kuwait (NBK) branding — not affiliated with NBK · CatBoost Loan Approval Model · Built with Streamlit & Plotly</div>',
+    '<div class="footer-note">Concept project inspired by NBK branding — not affiliated with or endorsed by National Bank of Kuwait · CatBoost Loan Approval Model · Built with Streamlit & Plotly</div>',
     unsafe_allow_html=True,
 )
