@@ -11,29 +11,37 @@ from catboost import CatBoostClassifier
 # PAGE CONFIG
 # ======================================================================================
 st.set_page_config(
-    page_title="NBK Pulse | AI Loan Intelligence",
+    page_title="VaultIQ | AI Loan Intelligence",
     page_icon="🟡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
+PAGES = ["🔮 Predict", "📊 Model Insights", "ℹ️ About"]
+if "sidebar_nav" not in st.session_state:
+    st.session_state.sidebar_nav = PAGES[0]
+
+
+def set_page(target_page):
+    st.session_state.sidebar_nav = target_page
+
+
 # ======================================================================================
-# CUSTOM CSS — BLACK / GOLD / YELLOW MODERN THEME
+# CUSTOM CSS — PURE BLACK / GOLD MODERN THEME
 # ======================================================================================
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
     :root {
-        --c-black: #050505;
-        --c-black2: #0d0c09;
-        --c-panel: rgba(255,255,255,0.045);
+        --c-black: #020202;
+        --c-panel: rgba(255,255,255,0.04);
         --c-gold: #d4af37;
         --c-gold-light: #f4d67a;
         --c-yellow: #ffd447;
         --c-text: #f4f1e8;
-        --c-muted: #a49f8f;
+        --c-muted: #9d988a;
     }
 
     html, body, [class*="css"]  {
@@ -45,7 +53,7 @@ st.markdown(
     }
 
     html, body {
-        background: var(--c-black);
+        background: #000000;
     }
 
     /* App background */
@@ -80,7 +88,7 @@ st.markdown(
         z-index: 1;
     }
     header[data-testid="stHeader"] {
-        background: rgba(5,5,5,0.55) !important;
+        background: rgba(0,0,0,0.6) !important;
         backdrop-filter: blur(4px);
     }
 
@@ -88,90 +96,155 @@ st.markdown(
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* NBK PULSE LOGO */
-    .nbk-logo-wrap {
-        text-align: center;
-        padding: 0.3rem 0 1rem 0;
+    /* ============================ BRAND MARK ============================ */
+    .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
     }
-    .nbk-logo {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 0.55rem auto;
-        clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
-        background: linear-gradient(150deg, #0c0c0d, #1c1a12);
-        border: 1.5px solid var(--c-gold);
+    .brand-mark {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: 11px;
+        background: linear-gradient(150deg, var(--c-gold), var(--c-yellow));
         display: flex;
         align-items: center;
         justify-content: center;
-        animation: logo-glow 3s ease-in-out infinite;
+        box-shadow: 0 4px 16px rgba(212,175,55,0.4);
     }
-    @keyframes logo-glow {
-        0%, 100% { box-shadow: 0 0 14px rgba(212,175,55,0.30), inset 0 0 10px rgba(212,175,55,0.08); }
-        50%      { box-shadow: 0 0 28px rgba(255,212,71,0.55), inset 0 0 16px rgba(255,212,71,0.18); }
-    }
-    .nbk-logo-word {
+    .brand-word {
         font-family: 'Poppins', sans-serif;
         font-weight: 800;
-        letter-spacing: 0.08em;
-        font-size: 1.05rem;
+        font-size: 1.2rem;
         color: #ffffff;
+        line-height: 1.1;
+        white-space: nowrap;
     }
-    .nbk-logo-word span {
-        color: var(--c-gold);
-        margin-left: 0.28rem;
-    }
-    .nbk-logo-tagline {
+    .brand-word span { color: var(--c-gold); }
+    .brand-tagline {
         color: var(--c-muted);
-        font-size: 0.74rem;
-        letter-spacing: 0.03em;
+        font-size: 0.72rem;
+        letter-spacing: 0.02em;
+    }
+    .sidebar-brand {
+        text-align: center;
+        padding: 0.3rem 0 1rem 0;
+    }
+    .sidebar-brand .brand-row { justify-content: center; margin-bottom: 0.5rem; }
+    .sidebar-brand .brand-mark { animation: mark-glow 3s ease-in-out infinite; }
+    @keyframes mark-glow {
+        0%, 100% { box-shadow: 0 0 12px rgba(212,175,55,0.35); }
+        50%      { box-shadow: 0 0 24px rgba(255,212,71,0.6); }
     }
 
-    /* HERO BANNER */
+    /* ============================ TOP NAVBAR ============================ */
+    .top-navbar-wrap {
+        padding: 0.6rem 0 0.2rem 0;
+        border-bottom: 1px solid rgba(212,175,55,0.14);
+        margin-bottom: 1.6rem;
+    }
+    .st-key-topnav_predict button,
+    .st-key-topnav_insights button,
+    .st-key-topnav_about button {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        font-weight: 600 !important;
+        border-radius: 0 !important;
+        padding: 0.3rem 0.1rem !important;
+    }
+    .st-key-topnav_predict button[kind="secondary"],
+    .st-key-topnav_insights button[kind="secondary"],
+    .st-key-topnav_about button[kind="secondary"] {
+        color: #c9c3b3 !important;
+        border-bottom: 2px solid transparent !important;
+    }
+    .st-key-topnav_predict button[kind="primary"],
+    .st-key-topnav_insights button[kind="primary"],
+    .st-key-topnav_about button[kind="primary"] {
+        color: var(--c-yellow) !important;
+        border-bottom: 2px solid var(--c-gold) !important;
+    }
+    .st-key-cta_get_started button {
+        background: linear-gradient(90deg, var(--c-gold), var(--c-yellow)) !important;
+        color: #0a0a0a !important;
+        font-weight: 700 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        box-shadow: 0 8px 20px rgba(212,175,55,0.35) !important;
+    }
+
+    /* ============================ HERO ============================ */
     .hero-banner {
         position: relative;
         border-radius: 22px;
         overflow: hidden;
-        padding: 3.2rem 2.5rem;
-        margin-bottom: 1.4rem;
-        background-image:
-            linear-gradient(120deg, rgba(3,3,3,0.93) 10%, rgba(18,15,4,0.82) 55%, rgba(46,35,4,0.55) 100%),
-            url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1600&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.55);
-        border: 1px solid rgba(212,175,55,0.18);
+        padding: 3.4rem 2.6rem;
+        margin-bottom: 1.6rem;
+        background:
+            radial-gradient(ellipse at 25% 15%, rgba(212,175,55,0.14), transparent 55%),
+            radial-gradient(ellipse at 85% 80%, rgba(255,212,71,0.08), transparent 55%),
+            #020202;
+        border: 1px solid rgba(212,175,55,0.16);
     }
     .hero-eyebrow {
         display: inline-block;
         padding: 0.35rem 0.9rem;
         border-radius: 30px;
-        background: rgba(255, 212, 71, 0.12);
-        border: 1px solid rgba(255, 212, 71, 0.4);
-        color: var(--c-yellow);
-        font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.06em;
+        background: transparent;
+        border: 1px solid rgba(212,175,55,0.55);
+        color: var(--c-gold);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        margin-bottom: 1rem;
+        margin-bottom: 1.2rem;
     }
     .hero-title {
-        font-size: 2.6rem;
+        font-size: 3rem;
         font-weight: 800;
         color: #ffffff;
-        margin: 0 0 0.6rem 0;
-        line-height: 1.15;
+        margin: 0 0 0.7rem 0;
+        line-height: 1.08;
+        letter-spacing: -0.01em;
     }
     .hero-title span {
-        background: linear-gradient(90deg, var(--c-gold), var(--c-yellow));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: var(--c-gold);
     }
     .hero-subtitle {
         font-size: 1.05rem;
-        color: #d9d3c2;
-        max-width: 680px;
-        line-height: 1.6;
+        color: #c9c3b3;
+        max-width: 640px;
+        line-height: 1.65;
         font-weight: 300;
+        margin-bottom: 1.8rem;
+    }
+    .st-key-cta_primary button {
+        background: linear-gradient(90deg, var(--c-gold), var(--c-yellow)) !important;
+        color: #0a0a0a !important;
+        font-weight: 700 !important;
+        font-size: 1.0rem !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1.6rem !important;
+        box-shadow: 0 10px 25px rgba(212,175,55,0.32) !important;
+        transition: transform 0.15s ease !important;
+    }
+    .st-key-cta_primary button:hover { transform: translateY(-2px) !important; }
+    .st-key-cta_secondary button {
+        background: transparent !important;
+        color: #f4f1e8 !important;
+        font-weight: 700 !important;
+        font-size: 1.0rem !important;
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1.6rem !important;
+        transition: border-color 0.15s ease, transform 0.15s ease !important;
+    }
+    .st-key-cta_secondary button:hover {
+        border-color: var(--c-gold) !important;
+        transform: translateY(-2px) !important;
     }
 
     /* TRUST STRIP */
@@ -179,11 +252,11 @@ st.markdown(
         display: flex;
         flex-wrap: wrap;
         gap: 0.6rem;
-        margin-top: 1.4rem;
+        margin-top: 1.6rem;
     }
     .trust-chip {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(212,175,55,0.25);
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(212,175,55,0.22);
         border-radius: 30px;
         padding: 0.4rem 0.9rem;
         font-size: 0.78rem;
@@ -194,23 +267,23 @@ st.markdown(
     /* DISCLAIMER — subtle small-print pill */
     .disclaimer-banner {
         display: inline-block;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(212,175,55,0.2);
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(212,175,55,0.18);
         border-radius: 30px;
-        padding: 0.35rem 0.9rem;
-        font-size: 0.7rem;
+        padding: 0.32rem 0.85rem;
+        font-size: 0.68rem;
         color: var(--c-muted);
-        margin-bottom: 0.9rem;
+        margin-top: 0.8rem;
     }
 
     /* METRIC / GLASS CARDS */
     .glass-card {
         background: var(--c-panel);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.07);
         border-radius: 18px;
         padding: 1.4rem 1.4rem;
         backdrop-filter: blur(6px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         height: 100%;
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
@@ -244,7 +317,7 @@ st.markdown(
         gap: 0.5rem;
     }
     .section-caption {
-        color: #b8b1a0;
+        color: #b0aa98;
         font-size: 0.9rem;
         margin-bottom: 1.1rem;
         font-weight: 300;
@@ -252,7 +325,7 @@ st.markdown(
 
     /* FORM CONTAINER */
     .form-block {
-        background: rgba(255,255,255,0.03);
+        background: rgba(255,255,255,0.025);
         border: 1px solid rgba(212,175,55,0.12);
         border-radius: 18px;
         padding: 1.6rem 1.7rem 1rem 1.7rem;
@@ -264,7 +337,7 @@ st.markdown(
         margin: -0.4rem 0 0.8rem 0;
     }
 
-    /* BUTTON */
+    /* MAIN PREDICT BUTTON */
     .stButton>button {
         background: linear-gradient(90deg, var(--c-gold), var(--c-yellow));
         color: #0a0a0a;
@@ -313,7 +386,7 @@ st.markdown(
 
     /* SIDEBAR */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #040404 0%, #0d0c08 100%);
+        background: linear-gradient(180deg, #000000 0%, #0a0906 100%);
         border-right: 1px solid rgba(212,175,55,0.10);
     }
     section[data-testid="stSidebar"] .stRadio label {
@@ -321,9 +394,7 @@ st.markdown(
     }
 
     /* Tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
-    }
+    .stTabs [data-baseweb="tab-list"] { gap: 6px; }
     .stTabs [data-baseweb="tab"] {
         background: rgba(255,255,255,0.04);
         border-radius: 10px 10px 0 0;
@@ -346,7 +417,7 @@ st.markdown(
         background-size: cover;
         background-position: center;
         border: 1px solid rgba(212,175,55,0.18);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .photo-tile:hover {
@@ -357,7 +428,7 @@ st.markdown(
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(0deg, rgba(2,2,2,0.94) 5%, rgba(2,2,2,0.2) 60%, rgba(2,2,2,0.05) 100%);
+        background: linear-gradient(0deg, rgba(0,0,0,0.95) 5%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.05) 100%);
     }
     .photo-tile-label {
         position: absolute;
@@ -382,14 +453,12 @@ st.markdown(
         border-radius: 16px;
         overflow: hidden;
         border: 1px solid rgba(212,175,55,0.18);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         transition: transform 0.25s ease;
     }
-    .mosaic-img:hover {
-        transform: translateY(-4px);
-    }
+    .mosaic-img:hover { transform: translateY(-4px); }
 
-    /* Dataframe / misc text */
+    /* Footer */
     .footer-note {
         text-align:center;
         color: var(--c-muted);
@@ -402,9 +471,9 @@ st.markdown(
     /* MOBILE RESPONSIVENESS */
     @media (max-width: 768px) {
         .hero-banner { padding: 2rem 1.2rem; border-radius: 16px; }
-        .hero-title { font-size: 1.65rem; line-height: 1.25; }
+        .hero-title { font-size: 1.8rem; line-height: 1.2; }
         .hero-subtitle { font-size: 0.92rem; }
-        .hero-eyebrow { font-size: 0.68rem; padding: 0.28rem 0.7rem; }
+        .hero-eyebrow { font-size: 0.66rem; padding: 0.26rem 0.65rem; }
         .trust-chip { font-size: 0.7rem; padding: 0.32rem 0.7rem; }
         .glass-card { padding: 1rem; }
         .glass-card h3 { font-size: 1.5rem; }
@@ -412,9 +481,11 @@ st.markdown(
         .photo-tile-label { font-size: 0.78rem; }
         .photo-tile-icon { font-size: 1.1rem; }
         .form-block { padding: 1.1rem 1rem 0.5rem 1rem; }
-        .nbk-logo { width: 54px; height: 54px; }
+        .brand-mark { width: 34px; height: 34px; min-width: 34px; }
+        .brand-word { font-size: 1.0rem; }
         .section-title { font-size: 1.15rem; }
         .result-title { font-size: 1.4rem; }
+        .top-navbar-wrap { padding-bottom: 0.4rem; }
     }
     </style>
     """,
@@ -431,9 +502,9 @@ def render_animated_background():
     components.html(
         """
         <canvas id="bg-canvas" style="display:block; width:100vw; height:100vh; background:
-            radial-gradient(ellipse at 20% 20%, rgba(212,175,55,0.12), transparent 55%),
-            radial-gradient(ellipse at 80% 75%, rgba(255,212,71,0.10), transparent 55%),
-            linear-gradient(180deg, #050505 0%, #0c0a06 45%, #100d07 100%);">
+            radial-gradient(ellipse at 15% 15%, rgba(212,175,55,0.08), transparent 50%),
+            radial-gradient(ellipse at 85% 80%, rgba(255,212,71,0.06), transparent 50%),
+            #000000;">
         </canvas>
         <script>
         const canvas = document.getElementById('bg-canvas');
@@ -453,16 +524,16 @@ def render_animated_background():
         window.addEventListener('resize', resize);
         resize();
 
-        const NUM_NODES = 70;
+        const NUM_NODES = 60;
         const MAX_DIST = 150;
         const nodes = [];
         for (let i = 0; i < NUM_NODES; i++) {
             nodes.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.35,
-                vy: (Math.random() - 0.5) * 0.35,
-                r: Math.random() * 1.8 + 1.0,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                r: Math.random() * 1.6 + 0.9,
             });
         }
 
@@ -482,7 +553,7 @@ def render_animated_background():
                     const dx = a.x - b.x, dy = a.y - b.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < MAX_DIST) {
-                        const alpha = (1 - dist / MAX_DIST) * 0.35;
+                        const alpha = (1 - dist / MAX_DIST) * 0.25;
                         ctx.strokeStyle = `rgba(212,175,55, ${alpha})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath();
@@ -495,7 +566,7 @@ def render_animated_background():
 
             for (const n of nodes) {
                 const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
-                grad.addColorStop(0, 'rgba(255, 212, 71, 0.9)');
+                grad.addColorStop(0, 'rgba(255, 212, 71, 0.85)');
                 grad.addColorStop(1, 'rgba(255, 212, 71, 0)');
                 ctx.fillStyle = grad;
                 ctx.beginPath();
@@ -571,28 +642,79 @@ def resolve_prediction(model, input_df):
     return prediction, approve_prob
 
 
+BRAND_MARK_SVG = """
+<div class="brand-mark">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2 L20 5.5 V11 C20 16 16.5 19.8 12 21 C7.5 19.8 4 16 4 11 V5.5 Z"
+              fill="#0a0a0a"/>
+        <path d="M8.2 12 L10.8 14.6 L15.8 9.4" stroke="#0a0a0a" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+</div>
+"""
+
+# ======================================================================================
+# TOP NAVBAR
+# ======================================================================================
+current_page = st.session_state.sidebar_nav
+
+st.markdown('<div class="top-navbar-wrap">', unsafe_allow_html=True)
+nav_l, nav_m1, nav_m2, nav_m3, nav_r = st.columns([2.4, 0.9, 1.3, 0.9, 1.3])
+with nav_l:
+    st.markdown(
+        f"""
+        <div class="brand-row">
+            {BRAND_MARK_SVG}
+            <div>
+                <div class="brand-word">Vault<span>IQ</span></div>
+                <div class="brand-tagline">AI Loan Intelligence</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+with nav_m1:
+    with st.container(key="topnav_predict"):
+        st.button(
+            "Predict", key="nav_predict_btn", use_container_width=True,
+            type=("primary" if current_page == PAGES[0] else "secondary"),
+            on_click=set_page, args=(PAGES[0],),
+        )
+with nav_m2:
+    with st.container(key="topnav_insights"):
+        st.button(
+            "Model Insights", key="nav_insights_btn", use_container_width=True,
+            type=("primary" if current_page == PAGES[1] else "secondary"),
+            on_click=set_page, args=(PAGES[1],),
+        )
+with nav_m3:
+    with st.container(key="topnav_about"):
+        st.button(
+            "About", key="nav_about_btn", use_container_width=True,
+            type=("primary" if current_page == PAGES[2] else "secondary"),
+            on_click=set_page, args=(PAGES[2],),
+        )
+with nav_r:
+    with st.container(key="cta_get_started"):
+        st.button(
+            "🔍 Get Started", key="nav_get_started_btn", use_container_width=True,
+            on_click=set_page, args=(PAGES[0],),
+        )
+st.markdown("</div>", unsafe_allow_html=True)
+
 # ======================================================================================
 # SIDEBAR
 # ======================================================================================
 with st.sidebar:
     st.markdown(
-        """
-        <div class="nbk-logo-wrap">
-            <div class="nbk-logo">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 14 L7 14 L9 9 L12 18 L15 6 L17 14 L22 14"
-                          stroke="url(#pulseGrad)" stroke-width="1.9"
-                          stroke-linecap="round" stroke-linejoin="round"/>
-                    <defs>
-                        <linearGradient id="pulseGrad" x1="0" y1="0" x2="24" y2="0">
-                            <stop offset="0" stop-color="#d4af37"/>
-                            <stop offset="1" stop-color="#ffd447"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
+        f"""
+        <div class="sidebar-brand">
+            <div class="brand-row">{BRAND_MARK_SVG}
+                <div style="text-align:left;">
+                    <div class="brand-word">Vault<span>IQ</span></div>
+                    <div class="brand-tagline">AI Loan Intelligence</div>
+                </div>
             </div>
-            <div class="nbk-logo-word">NBK <span>PULSE</span></div>
-            <div class="nbk-logo-tagline">AI Credit Intelligence</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -600,7 +722,8 @@ with st.sidebar:
 
     page = st.radio(
         "Navigate",
-        ["🔮 Predict", "📊 Model Insights", "ℹ️ About"],
+        PAGES,
+        key="sidebar_nav",
         label_visibility="collapsed",
     )
 
@@ -617,7 +740,7 @@ with st.sidebar:
     st.caption("Powered by CatBoost Gradient Boosting")
 
     st.markdown(
-        '<div class="disclaimer-banner">🎓 Concept project inspired by NBK — not an official NBK product</div>',
+        '<div class="disclaimer-banner">🎓 Concept / portfolio project — predictions are illustrative, not real credit decisions.</div>',
         unsafe_allow_html=True,
     )
 
@@ -632,6 +755,8 @@ with st.sidebar:
             "in the same folder as `app.py`."
         )
 
+page = st.session_state.sidebar_nav
+
 # ======================================================================================
 # HERO
 # ======================================================================================
@@ -639,22 +764,43 @@ st.markdown(
     """
     <div class="hero-banner">
         <div class="hero-eyebrow">🟡 AI-Powered Credit Risk Engine</div>
-        <div class="hero-title">Instant, explainable <span>loan approval</span><br>decisions in seconds</div>
+        <div class="hero-title">Know Your <span>Approval Odds</span><br>Instantly.</div>
         <div class="hero-subtitle">
-            NBK Pulse uses a CatBoost gradient-boosting model trained on applicant demographics,
+            VaultIQ uses a CatBoost gradient-boosting model trained on applicant demographics,
             income, employment, and credit-history data to predict loan approval outcomes with
-            94% accuracy — a concept banking experience built for a data science / machine
-            learning portfolio.
-        </div>
-        <div class="trust-strip">
-            <div class="trust-chip">⚡ Instant Decisioning</div>
-            <div class="trust-chip">🧠 94% Model Accuracy</div>
-            <div class="trust-chip">🔐 No Data Stored — Demo Only</div>
+            94% accuracy — track the key factors, explore the model, and get an instant decision.
         </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
+
+hero_cta_l, hero_cta_r, hero_cta_spacer = st.columns([1, 1, 2])
+with hero_cta_l:
+    with st.container(key="cta_primary"):
+        st.button(
+            "🚀 Start Application →", key="hero_cta_primary_btn", use_container_width=True,
+            on_click=set_page, args=(PAGES[0],),
+        )
+with hero_cta_r:
+    with st.container(key="cta_secondary"):
+        st.button(
+            "📊 View Model Insights", key="hero_cta_secondary_btn", use_container_width=True,
+            on_click=set_page, args=(PAGES[1],),
+        )
+
+st.markdown(
+    """
+    <div class="trust-strip">
+        <div class="trust-chip">⚡ Instant Decisioning</div>
+        <div class="trust-chip">🧠 94% Model Accuracy</div>
+        <div class="trust-chip">🔐 No Data Stored — Demo Only</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.write("")
 
 # ======================================================================================
 # PAGE: PREDICT
@@ -869,7 +1015,7 @@ if page == "🔮 Predict":
                         labels=["Approved", "Rejected"],
                         values=[approve_prob, 1 - approve_prob],
                         hole=0.62,
-                        marker=dict(colors=["#d4af37", "#e05252"], line=dict(color="#050505", width=2)),
+                        marker=dict(colors=["#d4af37", "#e05252"], line=dict(color="#000000", width=2)),
                         textinfo="label+percent",
                         textfont=dict(color="#050505", size=13),
                         sort=False,
@@ -1076,8 +1222,8 @@ else:
         st.markdown(
             """
             <div class="section-caption">
-            <b>NBK Pulse</b> is a machine-learning-powered loan approval predictor concept,
-            styled in NBK-inspired branding as a portfolio project. It is built with a
+            <b>VaultIQ</b> is a machine-learning-powered loan approval predictor concept built
+            for a data science / machine learning portfolio. It is built with a
             <b>CatBoost</b> gradient boosting classifier, reaching <b>94% accuracy</b> on the
             held-out test set. It evaluates applicant demographics, income, employment history,
             loan characteristics, and credit history to estimate the likelihood that a loan
@@ -1152,6 +1298,6 @@ else:
             )
 
 st.markdown(
-    '<div class="footer-note">Concept project inspired by NBK branding — not affiliated with or endorsed by National Bank of Kuwait · CatBoost Loan Approval Model · Built with Streamlit & Plotly</div>',
+    '<div class="footer-note">VaultIQ — concept / portfolio project · CatBoost Loan Approval Model · Built with Streamlit & Plotly</div>',
     unsafe_allow_html=True,
 )
