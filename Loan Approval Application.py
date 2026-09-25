@@ -649,16 +649,18 @@ def resolve_prediction(model, input_df):
     return prediction, approve_prob
 
 
-BRAND_MARK_SVG = """
-<div class="brand-mark">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2 L20 5.5 V11 C20 16 16.5 19.8 12 21 C7.5 19.8 4 16 4 11 V5.5 Z"
-              fill="#0a0a0a"/>
-        <path d="M8.2 12 L10.8 14.6 L15.8 9.4" stroke="#0a0a0a" stroke-width="1.8"
-              stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    </svg>
-</div>
-"""
+# NOTE: this must stay a single line (no embedded newlines). Splicing a
+# multi-line string into an already-indented st.markdown() block breaks
+# Streamlit's Markdown parser's indentation handling and makes it render
+# the surrounding HTML as a literal code block instead of parsing it.
+BRAND_MARK_SVG = (
+    '<div class="brand-mark"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" '
+    'xmlns="http://www.w3.org/2000/svg">'
+    '<path d="M12 2 L20 5.5 V11 C20 16 16.5 19.8 12 21 C7.5 19.8 4 16 4 11 V5.5 Z" fill="#0a0a0a"/>'
+    '<path d="M8.2 12 L10.8 14.6 L15.8 9.4" stroke="#0a0a0a" stroke-width="1.8" '
+    'stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    '</svg></div>'
+)
 
 # ======================================================================================
 # TOP NAVBAR
