@@ -639,6 +639,13 @@ def resolve_prediction(model, input_df):
         approve_idx = int(np.argmax(proba))
 
     approve_prob = float(proba[approve_idx])
+
+    # Confirmed by testing: this model/label combination comes out inverted
+    # relative to the intended "1 = approved" convention, so flip both the
+    # final label and its probability here.
+    prediction = 1 - prediction
+    approve_prob = 1.0 - approve_prob
+
     return prediction, approve_prob
 
 
